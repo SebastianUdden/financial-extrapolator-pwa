@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
-    title: `PWA Template`,
-    description: `The Progressive Web App starter pack, go make awesome stuff with it.`,
+    title: `SPM - Financial Extrapolator`,
+    description: `An extrapolator to help visualize the importance of good personal finance.`,
     author: `@gatsbyjs`,
   },
   plugins: [
@@ -18,8 +18,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Progressive Web App`,
-        short_name: `PWA`,
+        name: `SPM - Financial Extrapolator`,
+        short_name: `SPM - FE`,
         start_url: `/`,
         background_color: `#444`,
         theme_color: `#222`,
