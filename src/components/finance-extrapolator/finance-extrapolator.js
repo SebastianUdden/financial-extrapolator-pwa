@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import styled from "styled-components"
+
 import Input, { numberWithSpace } from "../common/input/Input"
 import {
   CURRENT,
@@ -11,89 +12,30 @@ import {
   PERCENTAGE,
   MONTH,
 } from "./constants"
+import YearlyChanges from "./yearly-changes"
+import {
+  ValueSum,
+  CategoryWrapper,
+  CategoryLabel,
+  FlexWrapper,
+  ToggleButton,
+} from "../common/styled"
 
-const YearlyChanges = ({
-  value,
-  growth,
-  isPositive,
-  isWithdrawal,
-  dividendOrWithdrawal,
-  changeLabel,
-}) => {
-  const [years, setYears] = useState(10)
-  const yearlyChanges = []
-  let newValue = value
-  for (let i = 0; i < years; i++) {
-    yearlyChanges.push(
-      <Li>
-        <ValueSum color={GREY}>År {i + 1}</ValueSum>
-        <ValueSum color={GREY}>
-          {numberWithSpace(Math.round(newValue))} kr
-        </ValueSum>
-        {dividendOrWithdrawal ? (
-          <ValueSum color={isPositive ? GREEN : RED}>
-            {numberWithSpace(
-              Math.round(newValue * (dividendOrWithdrawal / 100))
-            )}{" "}
-            kr
-          </ValueSum>
-        ) : (
-          <></>
-        )}
-      </Li>
-    )
-    if (growth) {
-      newValue = isPositive
-        ? newValue * (1 + growth / 100)
-        : newValue * (1 - growth / 100)
-    }
-    if (isWithdrawal) {
-      newValue = newValue * (1 - dividendOrWithdrawal / 100)
-    }
-  }
-  return (
-    <CategoryWrapper>
-      <FlexWrapper>
-        <Input
-          wide
-          color={GREY}
-          label="År"
-          labelType={CURRENT}
-          symbol={"år"}
-          value={years}
-          setValue={setYears}
-        />
-        <ToggleButton wide onClick={() => setYears(years + 1)}>
-          +
-        </ToggleButton>
-        <ToggleButton wide onClick={() => setYears(years - 1)}>
-          -
-        </ToggleButton>
-      </FlexWrapper>
-      {yearlyChanges && (
-        <>
-          <FlexWrapper>
-            <ValueSum color={GREY}>Antal</ValueSum>
-            <ValueSum color={GREY}>Kapital</ValueSum>
-            <ValueSum color={GREY}>{changeLabel}</ValueSum>
-          </FlexWrapper>
-          <Ul>{yearlyChanges}</Ul>
-        </>
-      )}
-    </CategoryWrapper>
-  )
-}
+const DOWN_ARROW = <>&#x25BE;</>
+const SIDE_ARROW = <>&#x25B8;</>
 
 const FinanceExtrapolator = () => {
-  const [showAssets, setShowAssets] = useState(true)
-  const [showDebts, setShowDebts] = useState(true)
-  const [showRealEstate, setShowRealEstate] = useState(true)
-  const [showCars, setShowCars] = useState(true)
-  const [showOther, setShowOther] = useState(true)
-  const [showFinancialInstruments, setShowFinancialInstruments] = useState(true)
-  const [showWork, setShowWork] = useState(true)
-  const [showPension, setShowPension] = useState(true)
-  const [showRealEstateIncome, setShowRealEstateIncome] = useState(true)
+  const [showAssets, setShowAssets] = useState()
+  const [showDebts, setShowDebts] = useState(false)
+  const [showRealEstate, setShowRealEstate] = useState(false)
+  const [showCars, setShowCars] = useState(false)
+  const [showOther, setShowOther] = useState(false)
+  const [showFinancialInstruments, setShowFinancialInstruments] = useState(
+    false
+  )
+  const [showWork, setShowWork] = useState(false)
+  const [showPension, setShowPension] = useState(false)
+  const [showRealEstateIncome, setShowRealEstateIncome] = useState(false)
   const [showCosts, setShowCosts] = useState(true)
   const [showIncome, setShowIncome] = useState(true)
   const [showSum, setShowSum] = useState(true)
@@ -420,7 +362,8 @@ const FinanceExtrapolator = () => {
         <Header>Min ekonomi</Header>
         <CategoryWrapper>
           <CategoryLabel onClick={() => setShowAssets(!showAssets)}>
-            Tillgångar
+            <span>Tillgångar</span>
+            <span>{showAssets ? DOWN_ARROW : SIDE_ARROW}</span>
           </CategoryLabel>
           {showAssets && (
             <>
@@ -561,7 +504,8 @@ const FinanceExtrapolator = () => {
         </CategoryWrapper>
         <CategoryWrapper>
           <CategoryLabel onClick={() => setShowDebts(!showDebts)}>
-            Skulder
+            <span>Skulder</span>
+            <span>{showDebts ? DOWN_ARROW : SIDE_ARROW}</span>
           </CategoryLabel>
           {showDebts && (
             <>
@@ -711,7 +655,8 @@ const FinanceExtrapolator = () => {
         <CategoryWrapper>
           <FlexWrapper>
             <CategoryLabel onClick={() => setShowRealEstate(!showRealEstate)}>
-              Fastigheter
+              <span>Fastigheter</span>
+              <span>{showRealEstate ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setRecType(recType === MONTH ? YEAR : MONTH)}
@@ -839,7 +784,8 @@ const FinanceExtrapolator = () => {
         <CategoryWrapper>
           <FlexWrapper>
             <CategoryLabel onClick={() => setShowCars(!showCars)}>
-              Bilar
+              <span>Bilar</span>
+              <span>{showCars ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setCcType(ccType === MONTH ? YEAR : MONTH)}
@@ -914,7 +860,8 @@ const FinanceExtrapolator = () => {
         <CategoryWrapper>
           <FlexWrapper>
             <CategoryLabel onClick={() => setShowOther(!showOther)}>
-              Övriga
+              <span>Övriga</span>
+              <span>{showOther ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setOcType(ocType === MONTH ? YEAR : MONTH)}
@@ -983,7 +930,8 @@ const FinanceExtrapolator = () => {
                 setShowFinancialInstruments(!showFinancialInstruments)
               }
             >
-              Finansiella instrument
+              <span>Finansiella instrument</span>
+              <span>{showFinancialInstruments ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setOiType(oiType === MONTH ? YEAR : MONTH)}
@@ -1048,7 +996,8 @@ const FinanceExtrapolator = () => {
         <CategoryWrapper>
           <FlexWrapper>
             <CategoryLabel onClick={() => setShowWork(!showWork)}>
-              Arbete
+              <span>Arbete</span>
+              <span>{showWork ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setWiType(wiType === MONTH ? YEAR : MONTH)}
@@ -1086,7 +1035,8 @@ const FinanceExtrapolator = () => {
         <CategoryWrapper>
           <FlexWrapper>
             <CategoryLabel onClick={() => setShowPension(!showPension)}>
-              Pension
+              <span>Pension</span>
+              <span>{showPension ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setPiType(piType === MONTH ? YEAR : MONTH)}
@@ -1128,7 +1078,8 @@ const FinanceExtrapolator = () => {
             <CategoryLabel
               onClick={() => setShowRealEstateIncome(!showRealEstateIncome)}
             >
-              Fastigheter
+              <span>Fastigheter</span>
+              <span>{showRealEstateIncome ? DOWN_ARROW : SIDE_ARROW}</span>
             </CategoryLabel>
             <CategoryLabelType
               onClick={() => setReiType(reiType === MONTH ? YEAR : MONTH)}
@@ -1153,7 +1104,8 @@ const FinanceExtrapolator = () => {
         <Header>Sammanställning</Header>
         <CategoryWrapper>
           <CategoryLabel onClick={() => setShowCosts(!showCosts)}>
-            Utgifter
+            <span>Utgifter</span>
+            <span>{showCosts ? DOWN_ARROW : SIDE_ARROW}</span>
           </CategoryLabel>
           {showCosts && (
             <>
@@ -1174,7 +1126,8 @@ const FinanceExtrapolator = () => {
         </CategoryWrapper>
         <CategoryWrapper>
           <CategoryLabel onClick={() => setShowIncome(!showIncome)}>
-            Inkomster
+            <span>Inkomster</span>
+            <span>{showIncome ? DOWN_ARROW : SIDE_ARROW}</span>
           </CategoryLabel>
           {showIncome && (
             <>
@@ -1195,7 +1148,8 @@ const FinanceExtrapolator = () => {
         </CategoryWrapper>
         <CategoryWrapper>
           <CategoryLabel onClick={() => setShowSum(!showSum)}>
-            Summa
+            <span>Summa</span>
+            <span>{showSum ? DOWN_ARROW : SIDE_ARROW}</span>
           </CategoryLabel>
           {showSum && (
             <>
@@ -1269,24 +1223,11 @@ const Column = styled.div`
   width: 100%;
   max-width: 600px;
 `
-const CategoryWrapper = styled.div`
-  border: 1px dashed #444;
-  padding: 1rem;
-`
-const CategoryLabel = styled.h2`
-  opacity: 0.7;
-  display: inline;
-  padding: 0rem;
-  margin: 0 0 0.8rem;
-  cursor: pointer;
-  user-select: none;
-  :hover {
-    color: orange;
-  }
-`
 
 const CategoryLabelType = styled(CategoryLabel)`
   color: orange;
+  width: inherit;
+  margin-left: 1rem;
   cursor: pointer;
   user-select: none;
   :hover {
@@ -1299,20 +1240,6 @@ const Header = styled.h1`
   opacity: 0.9;
 `
 
-const FlexWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 0;
-  padding: 0;
-`
-
-const ValueSum = styled.span`
-  width: 100%;
-  padding: 0;
-  color: ${p => p.color};
-  font-weight: 800;
-`
-
 const Error = styled.p`
   margin: 1rem;
   text-align: center;
@@ -1322,37 +1249,6 @@ const Error = styled.p`
 
 const InputWrapper = styled.div`
   width: 100%;
-`
-
-const Ul = styled.ul`
-  margin: 0;
-  padding: 0;
-`
-
-const Li = styled.li`
-  font-weight: 800;
-  margin: 0;
-  list-style: none;
-  display: flex;
-  justify-content: space-between;
-`
-
-const ToggleButton = styled.button`
-  background-color: inherit;
-  color: #666;
-  border: 1px solid #666;
-  margin: 0.2rem;
-  padding: 0.8rem;
-  font-weight: 800;
-  cursor: pointer;
-  ${p =>
-    p.wide &&
-    `
-    min-width: 2.3rem;
-  `}
-  :hover {
-    background-color: #3b3b3b;
-  }
 `
 
 export default FinanceExtrapolator
