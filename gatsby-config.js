@@ -1,8 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: `SPM - Financial Extrapolator`,
+    title: `SPM Financial Extrapolator`,
     description: `An extrapolator to help visualize the importance of good personal finance.`,
-    author: `@gatsbyjs`,
+    author: `@SebastianUdden`,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -18,8 +18,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `SPM - Financial Extrapolator`,
-        short_name: `SPM - FE`,
+        name: `SPM Financial Extrapolator`,
+        short_name: `SPMFE`,
         start_url: `/`,
         background_color: `#444`,
         theme_color: `#222`,
